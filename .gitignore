@@ -42,6 +42,10 @@ build/
 /smarttube/output
 /smarttubetv/output
 /smarttubemobile/release
+# per-flavor build output
+/smarttubetv/stbeta
+/smarttubetv/ststable
+/smarttubetv/stfdroid
 # google-services.json
 *.hprof
 log.txt
