@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      androidx.test:core 1.1.0 predates Android 12 and declares these helper activities with an
+      intent-filter but without android:exported. The app flavors target compileSdkVersion (34),
+      so the manifest merger rejects them and processAndroidTestManifest fails.
+
+      Patching the attribute in here instead of bumping androidx.test: the releases that ship a
+      fixed manifest also raise minSdk past this project's minSdkVersion = 17.
+    -->
+    <application>
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+            android:exported="true" />
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+            android:exported="true" />
+        <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+            android:exported="true" />
+    </application>
+
+</manifest>
