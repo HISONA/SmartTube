@@ -403,7 +403,7 @@ public class Utils {
             } else {
                 try {
                     setGlobalVolume(context, volume);
-                    showVolumeUI(context, player, volume);
+                    showSystemVolumeUI(context);
                 } catch (SecurityException e) {
                     // Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
                     setPlayerVolume(context, player, volume);
@@ -421,8 +421,9 @@ public class Utils {
     }
 
     /**
-     * Show the in-player volume slider. Falls back to a message when there's no player attached
-     * (e.g. volume commands coming from the remote control before the player is up).
+     * Show the in-player volume slider. Only reached when the global volume is fixed, so the
+     * system volume UI isn't an option here. Falls back to a message when there's no player
+     * attached (e.g. volume commands coming from the remote control before the player is up).
      */
     @SuppressLint("StringFormatMatches")
     private static void showVolumeUI(Context context, PlayerManager player, int volume) {
@@ -471,6 +472,18 @@ public class Utils {
             // Check that volume is set.
             // Because global value may not be supported (see FireTV Stick).
             MessageHelpers.showMessage(context, context.getString(R.string.volume, (int) (player.getVolume() * 100)));
+        }
+    }
+
+    public static void showSystemVolumeUI(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            // Show the system volume bar without changing the volume
+            audioManager.adjustStreamVolume(
+                    AudioManager.STREAM_MUSIC, // Target the music stream
+                    AudioManager.ADJUST_SAME, // No actual adjustment
+                    AudioManager.FLAG_SHOW_UI // This flag displays the volume UI
+            );
         }
     }
 
