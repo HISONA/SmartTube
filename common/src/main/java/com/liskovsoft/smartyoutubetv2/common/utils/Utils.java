@@ -403,7 +403,7 @@ public class Utils {
             } else {
                 try {
                     setGlobalVolume(context, volume);
-                    showSystemVolumeUI(context);
+                    showVolumeUI(context, player, volume);
                 } catch (SecurityException e) {
                     // Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
                     setPlayerVolume(context, player, volume);
@@ -412,13 +412,25 @@ public class Utils {
         }
     }
 
-    @SuppressLint("StringFormatMatches")
     private static void setPlayerVolume(Context context, PlayerManager player, int volume) {
         if (player == null) {
             return;
         }
         player.setVolume(volume / 100f);
-        MessageHelpers.showMessage(context, context.getString(R.string.volume, getPlayerVolume(player)));
+        showVolumeUI(context, player, getPlayerVolume(player));
+    }
+
+    /**
+     * Show the in-player volume slider. Falls back to a message when there's no player attached
+     * (e.g. volume commands coming from the remote control before the player is up).
+     */
+    @SuppressLint("StringFormatMatches")
+    private static void showVolumeUI(Context context, PlayerManager player, int volume) {
+        if (player != null) {
+            player.showVolume(volume);
+        } else if (context != null) {
+            MessageHelpers.showMessage(context, context.getString(R.string.volume, volume));
+        }
     }
 
     public static void volumeUp(Context context, PlayerManager player, boolean up) {
@@ -459,18 +471,6 @@ public class Utils {
             // Check that volume is set.
             // Because global value may not be supported (see FireTV Stick).
             MessageHelpers.showMessage(context, context.getString(R.string.volume, (int) (player.getVolume() * 100)));
-        }
-    }
-
-    public static void showSystemVolumeUI(Context context) {
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (audioManager != null) {
-            // Show the system volume bar without changing the volume
-            audioManager.adjustStreamVolume(
-                    AudioManager.STREAM_MUSIC, // Target the music stream
-                    AudioManager.ADJUST_SAME, // No actual adjustment
-                    AudioManager.FLAG_SHOW_UI // This flag displays the volume UI
-            );
         }
     }
 
