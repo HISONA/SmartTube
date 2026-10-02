@@ -35,6 +35,10 @@ project.ext {
     // androidXTestVersion = '1.1.0'
     //protobufVersion = '4.32.1'
     protobufVersion = '3.17.3' // the latest for Android 4
+    // protoc only generates sources, so it can be newer than the runtime above.
+    // Must be >= 3.21: the osx-aarch_64 artifacts before that are actually x86_64
+    // builds, which stopped running on Apple Silicon once Rosetta went away.
+    protocVersion = '3.21.12'
     androidXTestVersion = project.properties.testXSupportVersion
     modulePrefix = ':'
     if (gradle.ext.has('exoplayerModulePrefix')) {

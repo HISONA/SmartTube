@@ -66,7 +66,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:' + protobufVersion
+        artifact = 'com.google.protobuf:protoc:' + protocVersion
     }
 
     generateProtoTasks {
